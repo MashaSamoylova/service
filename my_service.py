@@ -63,7 +63,7 @@ class PhotoHandler(BaseHandler):
         with open("./static/images/photo_users" + name + ".jpg", 'w') as f:
             f.write(photo)
             f.close()
-            cur.execute('''UPDATE users SET avatar=? WHERE login=?''', ("./static/images/photo_users" + name + ".jpg", name))
+            cur.execute('''UPDATE users SET avatar=? WHERE login=?''', ("./static/images/photo_users/" + name + ".jpg", name))
             users_db.commit()
             self.redirect('/myprofile')
 
