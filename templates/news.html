@@ -1,0 +1,102 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <script src="../static/js/my.js"></script>
+    <title>{{title}}</title>
+
+    <!-- Bootstrap -->
+    <link href="../static/css/bootstrap.css" rel="stylesheet">
+    <link href="../static/css/news.css" rel="stylesheet">
+
+    <!-- HTML5 Shim and Respond.js IE8 support of HTML5 elements and media queries -->
+    <!-- WARNING: Respond.js doesn't work if you view the page via file:// -->
+    <!--[if lt IE 9]>
+      <script src="https://oss.maxcdn.com/libs/html5shiv/3.7.0/html5shiv.js"></script>
+      <script src="https://oss.maxcdn.com/libs/respond.js/1.4.2/respond.min.js"></script>
+    <![endif]-->
+  </head>
+  <body>
+    <div class="row">
+      <div class="col-md-offset-3 col-lg-offset-3 col-lg-6 col-md-6" style="margin-top: 100px">
+        <div class="col-lg-2 col-md-2" style="margin-top:10px; height:100px">
+          <img src="{{photo}}" class = "img-thumbnail">
+        </div>
+        <div class="col-lg-4 col-md-2">
+          <div class="input-group">
+            <input type="text" class="form-control" placeholder="Ваше сообщение" style="height: 50px; margin-top: 10px; width: 760px">
+            <button type="button" class="btn btn-default" style="margin-top: 10px" data-toggle="modal" data-target="#myModal">Отправить</button>
+          </div>
+        </div>
+      </div>
+      <div class=" col-md-offset-3 col-lg-offset-3 col-lg-6 col-md-6" style="background: #FFFAFA; margin-top: 7px">
+        <div class="col-lg-2 col-md-2" style="margin-top:10px; height:100px">
+          <img src="static/images/fon1.jpg" class = "img-thumbnail">
+        </div>
+        <font size="5">login</font>
+        <br><font size="3">text</font></br>
+      </div>
+      <div class=" col-md-offset-3 col-lg-offset-3 col-lg-6 col-md-6" style="background: #FFFAFA; margin-top: 7px">
+      </div>
+      <div class=" col-md-offset-3 col-lg-offset-3 col-lg-6 col-md-6" style="background: #FFFAFA; margin-top: 7px">
+      </div>
+      <div class=" col-md-offset-3 col-lg-offset-3 col-lg-6 col-md-6" style="background: #FFFAFA; margin-top: 7px">
+      </div>
+      <div class=" col-md-offset-3 col-lg-offset-3 col-lg-6 col-md-6" style="background: #FFFAFA; margin-top: 7px">
+      </div>
+      <div class=" col-md-offset-3 col-lg-offset-3 col-lg-6 col-md-6" style="background: #FFFAFA; margin-top: 7px">
+      </div>
+      <div class=" col-md-offset-3 col-lg-offset-3 col-lg-6 col-md-6" style="background: #FFFAFA; margin-top: 7px">
+      </div>
+      <div class=" col-md-offset-3 col-lg-offset-3 col-lg-6 col-md-6" style="background: #FFFAFA; margin-top: 7px">
+      </div>
+      <div class=" col-md-offset-3 col-lg-offset-3 col-lg-6 col-md-6" style="background: #FFFAFA; margin-top: 7px">
+      </div>
+      <div class=" col-md-offset-3 col-lg-offset-3 col-lg-6 col-md-6" style="background: #FFFAFA; margin-top: 7px">
+      </div>
+    </div>
+    <ul class="pager" style="opacity:0.9">
+      <li class="previous"><a href="#">&larr; Предыдущая</a></li>
+      <li class="next"><a href="#">Следующая &rarr;</a></li>
+    </ul>
+    <center>
+    <div class="input-group">
+      <input type="text" class="form-control" placeholder="Навигация" style="height: 50px; margin-top: 10px; opacity:0.9">
+      <button type="button" class="btn btn-default" style="margin-top: 10px;opacity:0.9" data-toggle="modal" data-target="#myModal">Отправить</button>
+    </div>
+  </center>
+
+    <!-- menu in the top-->
+    <div class="container">
+    <nav role="navigation" class="navbar navbar-default navbar-fixed-top">
+      <div class="container-fluid">
+        <!-- Brand and toggle get grouped for better mobile display -->
+        <div class="navbar-header">
+          <button type="button" data-target="#navbarCollapse" data-toggle="collapse" class="navbar-toggle">
+            <span class="sr-only">Toggle navigation</span>
+            <span class="icon-bar"></span>
+            <span class="icon-bar"></span>
+            <span class="icon-bar"></span>
+          </button>
+          <a href="" class="navbar-brand" style="color:black"><strong>Peregrine's Home</strong></a>
+        </div>
+        <!-- Collection of nav links and other content for toggling -->
+        <div id="navbarCollapse" class="collapse navbar-collapse">
+          <ul class="nav navbar-nav">
+            <li class="active"><a href="/news">Сообщения</a></li>
+            <li><a href="/myprofile">Мой Профиль</a></li>
+            <li><a href="#">Участники</a></li>
+          </ul>
+          <ul class="nav navbar-nav navbar-right">
+            <li><a href="/logout">ВЫЙТИ</a></li>
+          </ul>
+        </div>
+      </div>
+    <!-- jQuery (necessary for Bootstrap's JavaScript plugins) -->
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.0/jquery.min.js"></script>
+    <!-- Include all compiled plugins (below), or include individual files as needed -->
+    <script src="../static/js/bootstrap.min.js"></script>
+  </body>
+</html>

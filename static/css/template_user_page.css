@@ -1,0 +1,20 @@
+div.row{
+
+  height: 100px;
+  weight: 100px;
+  margin-top: 40px;
+}
+
+div.r{
+    height: 400px;
+    opacity: 0.9;
+    border-radius: 10px;
+    background: #FFFAFA;
+}
+
+body{
+background-image: url('../images/fon3.jpg');
+background-repeat:no-repeat;
+background-attachment:fixed;
+background-size: cover
+}

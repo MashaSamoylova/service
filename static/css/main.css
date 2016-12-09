@@ -1,0 +1,52 @@
+.row div{
+  background: #FFFAFA;
+	height: 700px;
+  opacity: 0.9;
+	margin-top: 125px;
+  overflow: hidden; /*скрыавает содержимое, если вышло за перделы объекта*/
+  border-radius: 18px;
+}
+
+div.m{
+/*	background: #CD5C5C;*/
+	height: 350px;
+  margin-top: 10px;
+	margin-left: 20px;
+	margin-right: 20px;
+}
+
+div.s{
+/*	background: #CD5C5C; */
+	height: 100px;
+	margin-top: 70px;
+	margin-left: 20px;
+	margin-right: 20px;
+}
+
+div.b{
+/*	background: #CD5C5C; */
+	height: 70px;
+	margin-top: 20px;
+	margin-top: 20px;
+	margin-left: 20px;
+	margin-right: 20px;
+}
+
+button{
+	width: 170px;
+  height: 50px;
+	margin-top: 20px;
+}
+
+h1{
+	opacity: 0.9;
+	font-size: 450%;
+	text-shadow: 4px 3px 0px #fff, 9px 8px 0px rgba(0,0,0,0.15);
+}
+
+body{
+background-image: url('../images/fon1.jpg');
+background-repeat:no-repeat;
+background-attachment:fixed;
+background-size: cover
+}

@@ -1,0 +1,14 @@
+.row div{
+	height: 700px;
+/*    background: #333;*/
+	margin-top: 60px;
+    overflow: hidden; /*скрыавает содержимое, если вышло за перделы объекта*/
+}
+
+body
+{
+background-image: url('../images/fon1.jpg');
+background-repeat:no-repeat;
+background-attachment:fixed;
+background-size: cover
+}

@@ -1,0 +1,12 @@
+.row div{
+  background: #FFFAFA;
+  height: 170px;
+  opacity: 0.9;
+  border-radius: 18px;
+}
+body{
+  background-image: url('../images/fon2.jpg');
+  background-repeat:no-repeat;
+  background-attachment:fixed;
+  background-size: cover
+}
