@@ -30,11 +30,13 @@ class LoginHandler(BaseHandler):
         self.render("./templates/main2.html")
 
     def post(self):
-        cur.execute('''SELECT * FROM users WHERE login=?''', (self.get_body_argument('login'),))
+        print self.get_body_argument('login')
+        print '''SELECT * FROM users WHERE login="%s"''' %self.get_body_argument('login')
+        cur.execute('''SELECT * FROM users WHERE login="%s AND password=%s"''' %(self.get_body_argument('login') ,self.get_body_argument('password')))
         for row in cur:
-            if row[2] == self.get_body_argument('password'):
-                self.set_secure_cookie("user", self.get_body_argument("login"))
-                self.redirect('/myprofile')
+            print row
+            self.set_secure_cookie("user", row[1])
+            self.redirect('/myprofile')
         self.write("net")
 
 class RegistrationHandler(tornado.web.RequestHandler):
