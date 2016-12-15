@@ -1,13 +1,33 @@
+# -*- coding: utf-8 -*-
 import tornado.ioloop
 import tornado.web
 import sqlite3
+import random
 import os
 
 users_db = sqlite3.connect('users.db')
 cur = users_db.cursor()
+
+fake_db = sqlite3.connect('fake.db')
+fake_cur = fake_db.cursor()
+
+dangerous_symbols = [ "'", '"', ")", "(", "-", "\\", ","]
+
+fanny_sentenses = ["Время тебе 100 раз",
+                    "Может еще 8 конфет?",
+                    "Тренировка в 10 залах",
+                    "Ложь спасет 1 тебя",
+                    "Перестань кидать 1 кавычку",
+                    "Вспомни себя 16 летним",
+                    "Заметь, ты 1 неочень",
+                    "Проверь пожалуйста 12 задачу",
+                    "Все в 13 лет",
+                    "Вас ждут час времени"]
+
 #cur.execute('''CREATE TABLE users(id INTEGER PRIMARY KEY, login VARCHAR(100),
 #password VARCHAR(100), age INTEGER, capacity VARCHAR(100), secret VARCHAR(100), avatar VARCHAR(100))''')
 #users_db.commit()
+
 
 #show all requests
 import tornado.options
@@ -30,14 +50,22 @@ class LoginHandler(BaseHandler):
         self.render("./templates/main2.html")
 
     def post(self):
-        print self.get_body_argument('login')
-        print '''SELECT * FROM users WHERE login="%s"''' %self.get_body_argument('login')
-        cur.execute('''SELECT * FROM users WHERE login="%s AND password=%s"''' %(self.get_body_argument('login') ,self.get_body_argument('password')))
+        pretend_login =  self.get_body_argument('login')
+        pretend_password = self.get_body_argument('password')
+        for symbol in dangerous_symbols:
+            if symbol in pretend_login or symbol in pretend_password:
+                print pretend_login
+                print "bivaet"
+                self.write(random.choice(fanny_sentenses))
+                return
+        cur = users_db.cursor()
+        cur.execute('''SELECT * FROM users WHERE login=?''' , (self.get_body_argument('login'),))
         for row in cur:
             print row
-            self.set_secure_cookie("user", row[1])
-            self.redirect('/myprofile')
-        self.write("net")
+            if row[2] == self.get_body_argument('password'):
+                self.set_secure_cookie("user", row[1])
+                self.redirect('/myprofile')
+        self.redirect("/login")
 
 class RegistrationHandler(tornado.web.RequestHandler):
     def get(self):
@@ -45,6 +73,7 @@ class RegistrationHandler(tornado.web.RequestHandler):
 
     def post(self):
         print self.get_body_argument('login')
+        cur = user_db.cursor()
         cur.execute('''SELECT COUNT(*) FROM users WHERE login=?''', (self.get_body_argument('login'),))
         for row in cur:
             if row[0]:
@@ -54,6 +83,7 @@ class RegistrationHandler(tornado.web.RequestHandler):
         except:
             self.render("./templates/registration.html", msg = "Age should be numeric")
             return
+        cur = user_db.cursor()
         cur.execute('''INSERT INTO users (id, login, password, age, capacity, secret, avatar)
                     VALUES(NULL,?,?,?,?,?, "./static/images/mprofile.png")''',
                     (self.get_body_argument('login'),
@@ -67,8 +97,23 @@ class RegistrationHandler(tornado.web.RequestHandler):
 class MyprofileHandler(BaseHandler):
     def get(self):
         name = tornado.escape.xhtml_escape(self.current_user)
+        cur = users_db.cursor()
         cur.execute('''SELECT * FROM users WHERE login=?''', (name,))
         for row in cur:
+            self.render("./templates/template_user_page.html",
+                        title=name,
+                        login=name,
+                        age=row[3],
+                        capacity=row[4],
+                        secret_place=row[5],
+                        photo=row[6])
+
+class HlebHandler(BaseHandler):
+    def get(self):
+        name = tornado.escape.xhtml_escape(self.current_user)
+        fake_cur = fake_db.cursor()
+        fake_cur.execute('''SELECT * FROM users WHERE login=?''', (name,))
+        for row in fake_cur:
             self.render("./templates/template_user_page.html",
                         title=name,
                         login=name,
@@ -80,11 +125,14 @@ class MyprofileHandler(BaseHandler):
 class PhotoHandler(BaseHandler):
     def post(self):
         name = tornado.escape.xhtml_escape(self.current_user)
+        print name
         photo = self.request.files['photo'][0]['body']
-        with open("./static/images/photo_users/" + name + ".jpg", 'w') as f:
+        name_photo = self.request.files['photo'][0]['filename']
+        with open("./static/images/photo_users/" + name_photo + ".jpg", 'w') as f:
             f.write(photo)
             f.close()
-            cur.execute('''UPDATE users SET avatar=? WHERE login=?''', ("./static/images/photo_users/" + name + ".jpg", name))
+            cur = users_db.cursor()
+            cur.execute('''UPDATE users SET avatar=? WHERE login=?''', ("./static/images/photo_users/" + name_photo + ".jpg", name))
             users_db.commit()
             self.redirect('/myprofile')
 
@@ -92,6 +140,16 @@ class LogoutHandler(BaseHandler):
     def get(self):
         self.clear_cookie("user")
         self.redirect('/')
+
+class HlebushekHandler(BaseHandler):
+    def get(self):
+        self.render("./templates/template_user_page.html",
+                    title="hlebushek",
+                    login="hlebushek",
+                    age=112,
+                    capacity="u tebya ne poluchitsy",
+                    secret_place="sqlmap",
+                    photo="./static/images/mprofile.png")
 
 settings = {
     "templates_path": os.path.join(os.path.dirname("./templates"), "templates"),
@@ -105,6 +163,7 @@ def make_app():
     (r"/login", LoginHandler),
     (r"/registration", RegistrationHandler),
     (r"/myprofile", MyprofileHandler),
+    (r"/hleb", HlebHandler),
     (r"/photo", PhotoHandler),
     (r"/logout", LogoutHandler),
     ], **settings)
