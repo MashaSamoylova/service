@@ -33,6 +33,15 @@ fanny_sentenses = ["Время тебе 100 раз",
 import tornado.options
 tornado.options.parse_command_line()
 
+def addslahes(string_):
+    if len(string_) > 100:
+        string_ = string_[:100]
+    for elem in dangerous_symbols:
+        if elem in string_:
+            string_ = string_.replace(elem, chr(0x5c) + elem)
+    return string_
+
+
 class BaseHandler(tornado.web.RequestHandler):
     def get_current_user(self):
         return self.get_secure_cookie("user")
@@ -50,22 +59,16 @@ class LoginHandler(BaseHandler):
         self.render("./templates/main2.html")
 
     def post(self):
-        pretend_login =  self.get_body_argument('login')
+        pretend_login =  addslahes(self.get_body_argument('login'))
         pretend_password = self.get_body_argument('password')
-        for symbol in dangerous_symbols:
-            if symbol in pretend_login or symbol in pretend_password:
-                print pretend_login
-                print "bivaet"
-                self.write(random.choice(fanny_sentenses))
-                return
         cur = users_db.cursor()
-        cur.execute('''SELECT * FROM users WHERE login=?''' , (self.get_body_argument('login'),))
+        cur.execute("SELECT * FROM users WHERE login=%s", %(pretend_login))
         for row in cur:
             print row
             if row[2] == self.get_body_argument('password'):
                 self.set_secure_cookie("user", row[1])
                 self.redirect('/myprofile')
-        self.redirect("/login")
+            self.redirect("/login")
 
 class RegistrationHandler(tornado.web.RequestHandler):
     def get(self):
@@ -173,3 +176,4 @@ if __name__=="__main__":
     app.listen(8888)
     print "Service started!\n"
     tornado.ioloop.IOLoop.current().start()
+    print addslahes("aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa'")
