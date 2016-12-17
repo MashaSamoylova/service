@@ -61,14 +61,20 @@ class LoginHandler(BaseHandler):
     def post(self):
         pretend_login =  addslahes(self.get_body_argument('login'))
         pretend_password = self.get_body_argument('password')
+        print pretend_login
         cur = users_db.cursor()
-        cur.execute("SELECT * FROM users WHERE login=%s", %(pretend_login))
+        print '''SELECT * FROM users WHERE login=%s AND password=%s''' %(pretend_login, pretend_password)
+        cur.execute('''SELECT * FROM users WHERE login=%s AND password=%s''' %(pretend_login, pretend_password))
         for row in cur:
             print row
-            if row[2] == self.get_body_argument('password'):
-                self.set_secure_cookie("user", row[1])
-                self.redirect('/myprofile')
-            self.redirect("/login")
+            self.set_secure_cookie("user", row[1])
+            self.redirect("/myprofile")
+            return
+        self.redirect("/login")
+
+
+
+            
 
 class RegistrationHandler(tornado.web.RequestHandler):
     def get(self):
