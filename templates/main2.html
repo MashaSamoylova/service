@@ -4,6 +4,7 @@
     <meta charset="utf-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1">
+    <script src="../static/js/my.js"></script>
     <title>Peregrine's Home</title>
 
     <!-- Bootstrap -->
@@ -25,9 +26,9 @@
             <h1>Peregrine's Home<h1>
           <div class="f">
             <form action="login" method="post">
-              <input type="text" class="form-control" placeholder="Логин" name="login">
-              <input type="password" class="form-control" placeholder="Пароль" name="password">
-              <button type="submit" class="btn btn-default">
+              <input type="text" class="form-control" placeholder="Логин" id="log" name="login">
+              <input type="password" class="form-control" placeholder="Пароль" id="pass" name="password">
+              <button onclick="encode()" type="submit" class="btn btn-default">
                 <font size="5" color="black">
                   Войти
                 </font>

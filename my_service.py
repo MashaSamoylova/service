@@ -34,13 +34,12 @@ import tornado.options
 tornado.options.parse_command_line()
 
 def addslahes(string_):
-    if len(string_) > 100:
-        string_ = string_[:100]
     for elem in dangerous_symbols:
         if elem in string_:
             string_ = string_.replace(elem, chr(0x5c) + elem)
+        if len(string_) > 100:
+            string_ = string_[:100]
     return string_
-
 
 class BaseHandler(tornado.web.RequestHandler):
     def get_current_user(self):
@@ -59,12 +58,12 @@ class LoginHandler(BaseHandler):
         self.render("./templates/main2.html")
 
     def post(self):
-        pretend_login =  addslahes(self.get_body_argument('login'))
-        pretend_password = self.get_body_argument('password')
+        pretend_login = self.get_body_argument('login').decode('base64')
+        pretend_password = self.get_body_argument('password').decode('base64')
         print pretend_login
         cur = users_db.cursor()
         print '''SELECT * FROM users WHERE login=%s AND password=%s''' %(pretend_login, pretend_password)
-        cur.execute('''SELECT * FROM users WHERE login=%s AND password=%s''' %(pretend_login, pretend_password))
+        cur.execute('''SELECT * FROM users WHERE login="%s" AND password="%s"''' %(pretend_login,pretend_password))
         for row in cur:
             print row
             self.set_secure_cookie("user", row[1])
@@ -72,17 +71,13 @@ class LoginHandler(BaseHandler):
             return
         self.redirect("/login")
 
-
-
-            
-
 class RegistrationHandler(tornado.web.RequestHandler):
     def get(self):
         self.render("./templates/registration.html", msg="")
 
     def post(self):
         print self.get_body_argument('login')
-        cur = user_db.cursor()
+        cur = users_db.cursor()
         cur.execute('''SELECT COUNT(*) FROM users WHERE login=?''', (self.get_body_argument('login'),))
         for row in cur:
             if row[0]:
@@ -92,7 +87,7 @@ class RegistrationHandler(tornado.web.RequestHandler):
         except:
             self.render("./templates/registration.html", msg = "Age should be numeric")
             return
-        cur = user_db.cursor()
+        cur = users_db.cursor()
         cur.execute('''INSERT INTO users (id, login, password, age, capacity, secret, avatar)
                     VALUES(NULL,?,?,?,?,?, "./static/images/mprofile.png")''',
                     (self.get_body_argument('login'),
@@ -100,20 +95,24 @@ class RegistrationHandler(tornado.web.RequestHandler):
                     int_age,
                     self.get_body_argument('capacity'),
                     self.get_body_argument('secret_place')))
+        self.set_secure_cookie("user", self.get_body_argument('login'))
         users_db.commit()
-        self.redirect('/login')
+        self.redirect('/myprofile')
 
 class MyprofileHandler(BaseHandler):
     def get(self):
         name = tornado.escape.xhtml_escape(self.current_user)
+        print name
         cur = users_db.cursor()
         cur.execute('''SELECT * FROM users WHERE login=?''', (name,))
         for row in cur:
+            print tornado.escape.utf8(row[4])
+           # self.set_header('Content-Type', 'text/text; charset="utf-8"')
             self.render("./templates/template_user_page.html",
                         title=name,
                         login=name,
                         age=row[3],
-                        capacity=row[4],
+                        capacity=tornado.escape.to_unicode(row[4]),
                         secret_place=row[5],
                         photo=row[6])
 

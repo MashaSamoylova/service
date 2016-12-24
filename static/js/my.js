@@ -8,3 +8,8 @@ function l_ph(){
   xhr.send(file);
   alert(xhr.responseText);
 }
+
+function encode(){
+  $("#log").val(btoa($("#log").val()));
+  $("#pass").val(btoa($("#pass").val()));
+}
