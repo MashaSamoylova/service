@@ -11,18 +11,6 @@ cur = users_db.cursor()
 fake_db = sqlite3.connect('fake.db')
 fake_cur = fake_db.cursor()
 
-dangerous_symbols = [ "'", '"', ")", "(", "-", "\\", ","]
-
-fanny_sentenses = ["Время тебе 100 раз",
-                    "Может еще 8 конфет?",
-                    "Тренировка в 10 залах",
-                    "Ложь спасет 1 тебя",
-                    "Перестань кидать 1 кавычку",
-                    "Вспомни себя 16 летним",
-                    "Заметь, ты 1 неочень",
-                    "Проверь пожалуйста 12 задачу",
-                    "Все в 13 лет",
-                    "Вас ждут час времени"]
 
 #cur.execute('''CREATE TABLE users(id INTEGER PRIMARY KEY, login VARCHAR(100),
 #password VARCHAR(100), age INTEGER, capacity VARCHAR(100), secret VARCHAR(100), avatar VARCHAR(100))''')
@@ -33,13 +21,6 @@ fanny_sentenses = ["Время тебе 100 раз",
 import tornado.options
 tornado.options.parse_command_line()
 
-def addslahes(string_):
-    for elem in dangerous_symbols:
-        if elem in string_:
-            string_ = string_.replace(elem, chr(0x5c) + elem)
-        if len(string_) > 100:
-            string_ = string_[:100]
-    return string_
 
 class BaseHandler(tornado.web.RequestHandler):
     def get_current_user(self):
@@ -63,13 +44,16 @@ class LoginHandler(BaseHandler):
         print pretend_login
         cur = users_db.cursor()
         print '''SELECT * FROM users WHERE login=%s AND password=%s''' %(pretend_login, pretend_password)
-        cur.execute('''SELECT * FROM users WHERE login="%s" AND password="%s"''' %(pretend_login,pretend_password))
-        for row in cur:
-            print row
-            self.set_secure_cookie("user", row[1])
-            self.redirect("/myprofile")
-            return
-        self.redirect("/login")
+        try:
+            cur.execute('''SELECT * FROM users WHERE login="%s" AND password="%s"''' %(pretend_login,pretend_password))
+            for row in cur:
+                print row
+                self.set_secure_cookie("user", row[1])
+                self.redirect("/myprofile")
+                return
+            self.redirect("/login")
+        except:
+            self.redirect("/login")
 
 class RegistrationHandler(tornado.web.RequestHandler):
     def get(self):
@@ -159,6 +143,27 @@ class HlebushekHandler(BaseHandler):
                     secret_place="sqlmap",
                     photo="./static/images/mprofile.png")
 
+class CapHandler(BaseHandler):
+    def post(self):
+        name = tornado.escape.xhtml_escape(self.current_user)
+        cur = users_db.cursor()
+        cur.execute('''UPDATE users SET capacity=? WHERE login=?''', (self.get_body_argument('cap'), name))
+        users_db.commit()
+        self.redirect('/myprofile')
+
+class FakeHandler(BaseHandler):
+    def post(self):
+        name = tornado.escape.xhtml_escape(self.current_user)
+        self.set_header('Content-Type', 'text/text; charset="utf-8"')
+        self.render("./templates/fake.html",
+                    title="Hlebushek",
+                    name="sdfsdfsdfsdf"+name[0]+"fhddfghdfhgh",
+                    capacity=self.get_body_argument('fake')
+        )
+
+
+
+
 settings = {
     "templates_path": os.path.join(os.path.dirname("./templates"), "templates"),
     "static_path": os.path.join(os.path.dirname("./static"), "static"),
@@ -174,6 +179,8 @@ def make_app():
     (r"/hleb", HlebHandler),
     (r"/photo", PhotoHandler),
     (r"/logout", LogoutHandler),
+    (r"/changecapacity", CapHandler),
+    (r"/fn", FakeHandler),
     ], **settings)
 
 if __name__=="__main__":
