@@ -9,7 +9,7 @@
 
     <!-- Bootstrap -->
     <link href="../static/css/bootstrap.css" rel="stylesheet">
-    <link href="../static/css/main2.css" rel="stylesheet">
+    <link href="../static/css/main2_and_askcode.css" rel="stylesheet">
 
     <!-- HTML5 Shim and Respond.js IE8 support of HTML5 elements and media queries -->
     <!-- WARNING: Respond.js doesn't work if you view the page via file:// -->
@@ -28,13 +28,13 @@
             <form action="login" method="post">
               <input type="text" class="form-control" placeholder="Логин" id="log" name="login">
               <input type="password" class="form-control" placeholder="Пароль" id="pass" name="password">
-              <button  type="submit" onclick="encode()" class="btn btn-default">
+              <button  type="submit" class="btn btn-default">
                 <font size="5" color="black">
                   Войти
                 </font>
               </button>
             </form>
-            <form action="/registration" method = "get">
+            <form action="/askcode" method = "get">
               <button type="submit" class="btn btn-default">
                 <font size="5" color="black">
                   Регистрация

@@ -23,7 +23,7 @@
         <div class="col-md-offset-1 col-lg-offset-1 col-lg-2 col-md-2" style="margin-top: 15px">
             <img src = {{photo}} class = "img-thumbnail">
             <button type="button" class="btn btn-default" style="margin-top: 10px" data-toggle="modal" data-target="#myModal">Изменить</button>
-            <button type="button" class="btn btn-default" style="margin-top: 10px" data-toggle="modal" data-target="#falsenegative">Подделка</button>
+            <button type="button" class="btn btn-default" style="margin-top: 10px" data-toggle="modal" data-target="#getCode">Получить код</button>
         </div>
         <div class="col-lg-6 col-md-6">
           <h1>{{login}}</h1>
@@ -38,9 +38,8 @@
           </br>
           <br>
           <font size="4">
-            Способность: <p>{% raw capacity %}</p>
+            Способность: <p id="rAbility">{% raw capacity %}</p>
           </font>
-          <button type="button" class="btn btn-default" style="margin-top: 10px" data-toggle="modal" data-target="#cap">Изменить</button>
         </br>
         <br>
         <font size="4">
@@ -65,29 +64,13 @@
       </div>
       </div>
       </div>
-      <div id="cap" class="modal fade">
+	
+      <div id="getCode" class="modal fade">
           <div class="modal-dialog">
               <div class="modal-content">
                   <div class="modal-body">
-                   <form method="post" action="/changecapacity">
-                          <input type="text" class="form-control" placeholder="Способность" name="cap">
-                              <button class="btn btn-default" style="margin-top: 10px">Отправить</button>
-                   </form>
-                  </div>
-          <div class="modal-footer">
-              <button class="btn btn-default" type="button" data-dismiss="modal">Закрыть</button>
-          </div>
-      </div>
-      </div>
-      </div>
-      <div id="falsenegative" class="modal fade">
-          <div class="modal-dialog">
-              <div class="modal-content">
-                  <div class="modal-body">
-                   <form method="post" action="/fn">
-                          <input type="text" class="form-control" placeholder="Способность" name="fake">
-                              <button class="btn btn-default" style="margin-top: 10px">Отправить</button>
-                   </form>
+                          <input type="text" id="ability" class="form-control" placeholder="Способность">
+                              <button class="btn btn-default" onclick="check()" style="margin-top: 10px">Получить</button>
                   </div>
           <div class="modal-footer">
               <button class="btn btn-default" type="button" data-dismiss="modal">Закрыть</button>
@@ -112,7 +95,7 @@
         <!-- Collection of nav links and other content for toggling -->
         <div id="navbarCollapse" class="collapse navbar-collapse">
           <ul class="nav navbar-nav">
-            <li><a href="#">Сообщения</a></li>
+            <li><a href="/news">Сообщения</a></li>
             <li class="active"><a href="/myprofile">Мой Профиль</a></li>
             <li><a href="#">Участники</a></li>
           </ul>
