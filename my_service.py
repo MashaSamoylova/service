@@ -238,25 +238,26 @@ class NewsHandler(tornado.web.RequestHandler): #messages writes in dictionary
                         (json.dumps(record),))
         db.commit()
 
-class WriteHandler(tornado.web.RequestHandler):
+class MembersHandler(tornado.web.RequestHandler):
     def get(self):
-        if self.get_secure_cookie("role") == "juxeNj4cX8Nv": #!!!!!!!!!!!!!!!!!
-            self.render("./templates/write.html")
-        else:
-            self.write("Permission denied")
+        name = self.get_secure_cookie('user')
+        if not check_member(name):
+            self.redirect('/')
+        
+        logins = []
+        loops = []
 
-    def post(self):
-        if self.get_secure_cookie("role") == "juxeNj4cX8Nv": #!!!!!!!!!!!!!!!!
-            cur = db.cursor()
-            cur.execute('''INSERT INTO codes (id, code,flag) VALUES(NULL,?,?)''', 
-                    (
-                        self.get_body_argument('code'),
-                        self.get_body_argument('flag')
-                    ))
-            db.commit()
-            self.redirect('/writecode')
-        else:
-            self.write("Permission denied")
+        cur = db.cursor()
+        cur.execute('''SELECT * FROM users''')
+        
+        for row in cur:
+            logins.append(row[1])
+            loops.append(row[5])
+
+        item = ["lol", "pizda", "pizdec"]
+        lol = ["blya", "ne rabotaet", "tot"]
+        self.render("./templates/members.html", items=logins, lols=loops)
+
 
 settings = {
     "templates_path": os.path.join(os.path.dirname("./templates"), "templates"),
@@ -276,7 +277,7 @@ def make_app():
     (r"/logout", LogoutHandler),
     (r"/msg", MessageHandler),
     (r"/news", NewsHandler),
-    (r"/writecode", WriteHandler),
+    (r"/members", MembersHandler),
     ], **settings)
 
 if __name__=="__main__":
